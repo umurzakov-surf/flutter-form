@@ -5,7 +5,7 @@ class PositionRepository {
     Position(1, 'Разработчик'),
     Position(2, 'Менеджер'),
   ];
-  getPositions() {
+  List<Position> getPositions() {
     return positionsList;
   }
 }

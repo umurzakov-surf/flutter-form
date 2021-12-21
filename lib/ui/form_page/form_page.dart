@@ -1,10 +1,11 @@
+import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:elementary/elementary.dart';
 import 'package:flutter_form/enum/input_type_enum.dart';
 import 'package:flutter_form/service/model/position.dart';
 import 'package:flutter_form/ui/form_page/form_page_wm.dart';
 import 'package:flutter_form/ui/form_page/widgets/form_input.dart';
+import 'package:flutter_form/validation.dart';
 
 class FormPage extends ElementaryWidget<FormPageWM> {
   const FormPage({Key? key}) : super(formPageWMFactory, key: key);
@@ -22,22 +23,26 @@ class FormPage extends ElementaryWidget<FormPageWM> {
           child: Column(
             children: [
               FormInput(
-                validator: wm.validateEmail,
+                validator: Validation().validateEmail,
                 inputType: InputTypeEnum.email,
                 icon: Icons.email,
                 controller: wm.emailController,
+                focusNode: wm.emailFocus,
+                onFieldSubmitted: wm.onFieldSubmitted(wm.nameFocus),
               ),
               FormInput(
-                validator: wm.validateName,
+                validator: Validation().validateName,
                 inputType: InputTypeEnum.name,
                 icon: Icons.person,
                 controller: wm.nameController,
+                focusNode: wm.nameFocus,
               ),
               FormInput(
-                validator: wm.validatePhone,
+                validator: Validation().validatePhone,
                 inputType: InputTypeEnum.phone,
                 icon: Icons.phone,
                 controller: wm.phoneController,
+                focusNode: wm.phoneFocus,
               ),
               ValueListenableBuilder<bool>(
                 valueListenable: wm.isEnabled,
@@ -50,11 +55,12 @@ class FormPage extends ElementaryWidget<FormPageWM> {
                         value: isEnabled,
                       ),
                       FormInput(
-                        validator: wm.validateDisabled,
+                        validator: isEnabled ? Validation().validateDisabled : ([v]) => null,
                         inputType: InputTypeEnum.disabled,
                         icon: Icons.disabled_by_default,
                         enabled: isEnabled,
                         controller: wm.disabledController,
+                        focusNode: wm.disabledFocus,
                       ),
                     ],
                   );
@@ -66,15 +72,16 @@ class FormPage extends ElementaryWidget<FormPageWM> {
                   if (data == null) {
                     return const CircularProgressIndicator();
                   }
+
                   return DropdownButtonFormField<int>(
                     value: wm.selectedPosition,
-                    validator: wm.validatePosition,
+                    validator: Validation().validatePosition,
                     items: [
                       for (final position in data)
                         DropdownMenuItem(
                           value: position.id,
                           child: Text(position.label),
-                        )
+                        ),
                     ],
                     onChanged: wm.changeDropdown,
                     hint: const Text('Должность'),

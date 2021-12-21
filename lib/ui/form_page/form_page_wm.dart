@@ -5,9 +5,8 @@ import 'package:flutter_form/service/repository/position_repository.dart';
 import 'package:flutter_form/ui/form_page/form_page.dart';
 import 'package:flutter_form/ui/form_page/form_page_model.dart';
 import 'package:flutter_form/ui/success_page/success_page.dart';
-import 'package:flutter_form/validation.dart';
 
-FormPageWM formPageWMFactory(BuildContext context) =>
+FormPageWM formPageWMFactory(BuildContext _) =>
     FormPageWM(FormPageModel(PositionRepository()));
 
 class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
@@ -16,13 +15,20 @@ class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController disabledController = TextEditingController();
+
+  final emailFocus = FocusNode();
+  final nameFocus = FocusNode();
+  final phoneFocus = FocusNode();
+  final disabledFocus = FocusNode();
+
   final ValueNotifier<bool> _isEnabled = ValueNotifier<bool>(false);
   final _positionState = EntityStateNotifier<List<Position>>();
-  int? _selectedPosition;
 
   ValueNotifier<bool> get isEnabled => _isEnabled;
   ListenableState<EntityState<List<Position>>> get positionState => _positionState;
   int? get selectedPosition => _selectedPosition;
+
+  int? _selectedPosition;
 
   FormPageWM(FormPageModel model) : super(model);
 
@@ -31,46 +37,6 @@ class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
     super.initWidgetModel();
 
     _loadPositions();
-  }
-
-  String? validateEmail([String? v]) {
-    if (v != null && v.isValidEmail) {
-      return null;
-    } else {
-      return 'Enter valid email';
-    }
-  }
-
-  String? validateName([String? v]) {
-    if (v != null && v.isValidName) {
-      return null;
-    } else {
-      return 'Enter valid name';
-    }
-  }
-
-  String? validatePhone([String? v]) {
-    if (v != null && v.isValidPhone) {
-      return null;
-    } else {
-      return 'Enter valid phone';
-    }
-  }
-
-  String? validateDisabled([String? v]) {
-    if (v != null && v.isValidPhone || !_isEnabled.value) {
-      return null;
-    } else {
-      return 'Enter 4 or more symbols';
-    }
-  }
-
-  String? validatePosition([Object? v]) {
-    if(v != null) {
-      return null;
-    } else {
-      return 'Select position';
-    }
   }
 
   void changeDropdown([Object? v]) {
@@ -89,8 +55,14 @@ class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
     _isEnabled.value = value ?? true;
   }
 
+  Function(String?) onFieldSubmitted(FocusNode focus) {
+    return (v) {
+      FocusScope.of(context).requestFocus(focus);
+    };
+  }
+
   void _loadPositions() {
-    var positionList = model.getPositionList();
+    final positionList = model.getPositionList();
     _positionState.content(positionList);
   }
 }
