@@ -39,12 +39,12 @@ class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
     _loadPositions();
   }
 
-  void changeDropdown([Object? v]) {
-    _selectedPosition = int.parse('$v');
+  void changeDropdown([int? v]) {
+    _selectedPosition = v;
   }
 
   void validateForm() {
-    if (formKey.currentState!.validate()) {
+    if (formKey.currentState?.validate()?? false) {
       Navigator.of(context).push(MaterialPageRoute<void>(
         builder: (_) => const SuccessPage(),
       ));

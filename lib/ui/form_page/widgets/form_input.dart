@@ -46,6 +46,7 @@ class FormInput extends StatelessWidget {
       enabled: enabled,
       controller: controller,
       inputFormatters: textInputFormatters,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
     );
   }
 }
