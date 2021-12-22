@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_form/phone_formatter.dart';
-import 'package:flutter_form/service/model/position.dart';
 import 'package:flutter_form/ui/form_page/enum/input_type_enum.dart';
 import 'package:flutter_form/ui/form_page/form_page_wm.dart';
+import 'package:flutter_form/ui/form_page/widgets/dropdown.dart';
 import 'package:flutter_form/ui/form_page/widgets/form_input.dart';
 import 'package:flutter_form/validation.dart';
 
@@ -84,27 +84,10 @@ class FormPage extends ElementaryWidget<FormPageWM> {
                     );
                   },
                 ),
-                EntityStateNotifierBuilder<List<Position>>(
-                  listenableEntityState: wm.positionState,
-                  builder: (_, data) {
-                    if (data == null) {
-                      return const CircularProgressIndicator();
-                    }
-
-                    return DropdownButtonFormField<int>(
-                      value: wm.selectedPosition,
-                      validator: Validation().validatePosition,
-                      items: [
-                        for (final position in data)
-                          DropdownMenuItem<int>(
-                            value: position.id,
-                            child: Text(position.label),
-                          ),
-                      ],
-                      onChanged: wm.changeDropdown,
-                      hint: const Text('Должность'),
-                    );
-                  },
+                Dropdown(
+                  positionState: wm.positionState,
+                  selectedPosition: wm.selectedPosition,
+                  changeDropdown: wm.changeDropdown,
                 ),
                 ValueListenableBuilder<bool>(
                   valueListenable: wm.isBtnDisabled,
