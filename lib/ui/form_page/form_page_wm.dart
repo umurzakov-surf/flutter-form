@@ -22,9 +22,11 @@ class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
   final disabledFocus = FocusNode();
 
   final ValueNotifier<bool> _isEnabled = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isBtnDisabled = ValueNotifier<bool>(true);
   final _positionState = EntityStateNotifier<List<Position>>();
 
   ValueNotifier<bool> get isEnabled => _isEnabled;
+  ValueNotifier<bool> get isBtnDisabled => _isBtnDisabled;
   ListenableState<EntityState<List<Position>>> get positionState => _positionState;
   int? get selectedPosition => _selectedPosition;
 
@@ -41,9 +43,10 @@ class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
 
   void changeDropdown([int? v]) {
     _selectedPosition = v;
+    _validateForm();
   }
 
-  void validateForm() {
+  void toSuccessPage() {
     if (formKey.currentState?.validate()?? false) {
       Navigator.of(context).push(MaterialPageRoute<void>(
         builder: (_) => const SuccessPage(),
@@ -52,7 +55,12 @@ class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
   }
 
   void toggleCheckbox(bool? value) {
-    _isEnabled.value = value ?? true;
+    _isEnabled.value = value ?? false;
+    _validateForm();
+  }
+
+  void onInputChange(String value) {
+    _validateForm();
   }
 
   Function(String?) onFieldSubmitted(FocusNode focus) {
@@ -64,5 +72,9 @@ class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
   void _loadPositions() {
     final positionList = model.getPositionList();
     _positionState.content(positionList);
+  }
+
+  void _validateForm() {
+    isBtnDisabled.value = !formKey.currentState!.validate();
   }
 }

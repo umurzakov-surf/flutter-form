@@ -18,7 +18,8 @@ class FormInput extends StatelessWidget {
   final FocusNode? focusNode;
   final FocusNode? nextFocusNode;
   final Function(String)? onFieldSubmitted;
-  final List<TextInputFormatter>? textInputFormatters;
+  final List<TextInputFormatter>? inputFormatters;
+  final Function(String)? onChanged;
 
   const FormInput({
     Key? key,
@@ -30,7 +31,8 @@ class FormInput extends StatelessWidget {
     this.focusNode,
     this.nextFocusNode,
     this.onFieldSubmitted,
-    this.textInputFormatters,
+    this.inputFormatters,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -45,8 +47,9 @@ class FormInput extends StatelessWidget {
       validator: validator,
       enabled: enabled,
       controller: controller,
-      inputFormatters: textInputFormatters,
+      inputFormatters: inputFormatters,
       autovalidateMode: AutovalidateMode.onUserInteraction,
+      onChanged: onChanged,
     );
   }
 }

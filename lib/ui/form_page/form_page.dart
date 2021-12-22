@@ -1,7 +1,9 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_form/enum/input_type_enum.dart';
+import 'package:flutter_form/phone_formatter.dart';
 import 'package:flutter_form/service/model/position.dart';
 import 'package:flutter_form/ui/form_page/form_page_wm.dart';
 import 'package:flutter_form/ui/form_page/widgets/form_input.dart';
@@ -29,6 +31,7 @@ class FormPage extends ElementaryWidget<FormPageWM> {
                 controller: wm.emailController,
                 focusNode: wm.emailFocus,
                 onFieldSubmitted: wm.onFieldSubmitted(wm.nameFocus),
+                onChanged: wm.onInputChange,
               ),
               FormInput(
                 validator: Validation().validateName,
@@ -36,6 +39,10 @@ class FormPage extends ElementaryWidget<FormPageWM> {
                 icon: Icons.person,
                 controller: wm.nameController,
                 focusNode: wm.nameFocus,
+                onChanged: wm.onInputChange,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
+                ],
               ),
               FormInput(
                 validator: Validation().validatePhone,
@@ -43,6 +50,11 @@ class FormPage extends ElementaryWidget<FormPageWM> {
                 icon: Icons.phone,
                 controller: wm.phoneController,
                 focusNode: wm.phoneFocus,
+                onChanged: wm.onInputChange,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp('[0-9-]')),
+                  PhoneFormatter(sample: 'xxx-xxx-xxxx', separator: '-'),
+                ],
               ),
               ValueListenableBuilder<bool>(
                 valueListenable: wm.isEnabled,
@@ -55,12 +67,15 @@ class FormPage extends ElementaryWidget<FormPageWM> {
                         value: isEnabled,
                       ),
                       FormInput(
-                        validator: isEnabled ? Validation().validateDisabled : ([v]) => null,
+                        validator: isEnabled
+                            ? Validation().validateDisabled
+                            : ([v]) => null,
                         inputType: InputTypeEnum.disabled,
                         icon: Icons.disabled_by_default,
                         enabled: isEnabled,
                         controller: wm.disabledController,
                         focusNode: wm.disabledFocus,
+                        onChanged: wm.onInputChange,
                       ),
                     ],
                   );
@@ -78,7 +93,7 @@ class FormPage extends ElementaryWidget<FormPageWM> {
                     validator: Validation().validatePosition,
                     items: [
                       for (final position in data)
-                        DropdownMenuItem(
+                        DropdownMenuItem<int>(
                           value: position.id,
                           child: Text(position.label),
                         ),
@@ -88,12 +103,17 @@ class FormPage extends ElementaryWidget<FormPageWM> {
                   );
                 },
               ),
-              Container(
-                padding: const EdgeInsets.all(20),
-                child: ElevatedButton(
-                  child: const Text('Submit'),
-                  onPressed: wm.validateForm,
-                ),
+              ValueListenableBuilder<bool>(
+                valueListenable: wm.isBtnDisabled,
+                builder: (_, isDisabled, __) {
+                  return Container(
+                    padding: const EdgeInsets.all(20),
+                    child: ElevatedButton(
+                      child: const Text('Submit'),
+                      onPressed: isDisabled ? null : wm.toSuccessPage,
+                    ),
+                  );
+                },
               ),
             ],
           ),

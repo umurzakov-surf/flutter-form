@@ -6,9 +6,9 @@ class Validation {
   }
 
   String? validateName([String? v]) {
-    final regExp = RegExp(r'^[a-zA-Z]{4}$');
+    final regExp = RegExp(r'^[a-zA-Z]{4,}$');
 
-    return v != null && regExp.hasMatch(v) ? null : 'Enter valid name';
+    return v != null && regExp.hasMatch(v) ? null : 'Enter valid name (minimum 4 characters)';
   }
 
   String? validatePhone([String? v]) {
@@ -23,7 +23,7 @@ class Validation {
     return v != null && regExp.hasMatch(v) ? null : 'Valid format XXX-XXX-XXXX';
   }
 
-  String? validatePosition([Object? v]) {
+  String? validatePosition([int? v]) {
     return v != null ? null : 'Select position';
   }
 }
