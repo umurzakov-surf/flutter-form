@@ -1,9 +1,9 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form/service/model/position.dart';
-import 'package:flutter_form/service/repository/position_repository.dart';
 import 'package:flutter_form/ui/form_page/form_page.dart';
 import 'package:flutter_form/ui/form_page/form_page_model.dart';
+import 'package:flutter_form/ui/form_page/repository/position_repository.dart';
 import 'package:flutter_form/ui/success_page/success_page.dart';
 
 FormPageWM formPageWMFactory(BuildContext _) =>

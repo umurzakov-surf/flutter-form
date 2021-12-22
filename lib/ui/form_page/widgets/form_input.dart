@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form/enum/input_type_enum.dart';
+import 'package:flutter_form/ui/form_page/enum/input_type_enum.dart';
 
 Map<InputTypeEnum, String> _inputTypesList = <InputTypeEnum, String>{
   InputTypeEnum.email : 'Email',
