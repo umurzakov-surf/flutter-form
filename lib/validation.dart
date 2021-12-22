@@ -23,7 +23,7 @@ class Validation {
     return v != null && regExp.hasMatch(v) ? null : 'Valid format XXX-XXX-XXXX';
   }
 
-  String? validatePosition([int? v]) {
-    return v != null ? null : 'Select position';
+  String? validateDropdown([int? v]) {
+    return v != null ? null : 'Select item';
   }
 }

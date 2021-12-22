@@ -1,13 +1,15 @@
 import 'package:elementary/elementary.dart';
-import 'package:flutter_form/service/model/position.dart';
-import 'package:flutter_form/ui/form_page/repository/position_repository.dart';
+import 'package:flutter_form/service/model/dropdown_item.dart';
+import 'package:flutter_form/ui/form_page/repository/dropdown_repository.dart';
 
 class FormPageModel extends ElementaryModel {
-  final PositionRepository _positionRepository;
+  final DropdownRepository _dropdownRepository;
 
-  FormPageModel(this._positionRepository) : super();
+  FormPageModel(this._dropdownRepository) : super();
 
-  List<Position> getPositionList() {
-    return _positionRepository.getPositions();
+  Future<List<DropdownItem>> getDropdownList() async {
+    final dropdownList = await _dropdownRepository.getDropdownList();
+
+    return dropdownList;
   }
 }

@@ -30,7 +30,7 @@ void main() {
     });
 
     test('Dropdown validator value should be null', () {
-      final result = validator.validatePosition(1);
+      final result = validator.validateDropdown(1);
       expect(result, null);
     });
   });

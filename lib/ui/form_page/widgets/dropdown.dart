@@ -1,38 +1,41 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form/service/model/position.dart';
+import 'package:flutter_form/service/model/dropdown_item.dart';
 
 import '../../../validation.dart';
 
 class Dropdown extends StatelessWidget {
-  final ListenableState<EntityState<List<Position>>> positionState;
-  final int? selectedPosition;
+  final ListenableState<EntityState<List<DropdownItem>>> dropdownState;
+  final int? selectedDropdownItem;
   final Function(int?) changeDropdown;
 
   const Dropdown({
     Key? key,
-    required this.positionState,
-    required this.selectedPosition,
+    required this.dropdownState,
+    required this.selectedDropdownItem,
     required this.changeDropdown,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return EntityStateNotifierBuilder<List<Position>>(
-      listenableEntityState: positionState,
+    return EntityStateNotifierBuilder<List<DropdownItem>>(
+      listenableEntityState: dropdownState,
+      loadingBuilder: (_, __) {
+        return const CircularProgressIndicator();
+      },
       builder: (_, data) {
         if (data == null) {
           return const CircularProgressIndicator();
         }
 
         return DropdownButtonFormField<int>(
-          value: selectedPosition,
-          validator: Validation().validatePosition,
+          value: selectedDropdownItem,
+          validator: Validation().validateDropdown,
           items: [
-            for (final position in data)
+            for (final dropdownItem in data)
               DropdownMenuItem<int>(
-                value: position.id,
-                child: Text(position.label),
+                value: dropdownItem.id,
+                child: Text(dropdownItem.label),
               ),
           ],
           onChanged: changeDropdown,

@@ -1,13 +1,13 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form/service/model/position.dart';
+import 'package:flutter_form/service/model/dropdown_item.dart';
 import 'package:flutter_form/ui/form_page/form_page.dart';
 import 'package:flutter_form/ui/form_page/form_page_model.dart';
-import 'package:flutter_form/ui/form_page/repository/position_repository.dart';
+import 'package:flutter_form/ui/form_page/repository/dropdown_repository.dart';
 import 'package:flutter_form/ui/success_page/success_page.dart';
 
 FormPageWM formPageWMFactory(BuildContext _) =>
-    FormPageWM(FormPageModel(PositionRepository()));
+    FormPageWM(FormPageModel(DropdownRepository()));
 
 class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
   final formKey = GlobalKey<FormState>();
@@ -23,14 +23,14 @@ class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
 
   final ValueNotifier<bool> _isEnabled = ValueNotifier<bool>(false);
   final ValueNotifier<bool> _isBtnDisabled = ValueNotifier<bool>(true);
-  final _positionState = EntityStateNotifier<List<Position>>();
+  final _dropdownState = EntityStateNotifier<List<DropdownItem>>();
 
   ValueNotifier<bool> get isEnabled => _isEnabled;
   ValueNotifier<bool> get isBtnDisabled => _isBtnDisabled;
-  ListenableState<EntityState<List<Position>>> get positionState => _positionState;
-  int? get selectedPosition => _selectedPosition;
+  ListenableState<EntityState<List<DropdownItem>>> get dropdownState => _dropdownState;
+  int? get selectedDropdownItem => _selectedDropdownItem;
 
-  int? _selectedPosition;
+  int? _selectedDropdownItem;
 
   FormPageWM(FormPageModel model) : super(model);
 
@@ -38,11 +38,11 @@ class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
   void initWidgetModel() {
     super.initWidgetModel();
 
-    _loadPositions();
+    _loadDropdownList();
   }
 
   void changeDropdown([int? v]) {
-    _selectedPosition = v;
+    _selectedDropdownItem = v;
     _validateForm();
   }
 
@@ -69,9 +69,10 @@ class FormPageWM extends WidgetModel<FormPage, FormPageModel> {
     };
   }
 
-  void _loadPositions() {
-    final positionList = model.getPositionList();
-    _positionState.content(positionList);
+  Future<void> _loadDropdownList() async {
+    _dropdownState.loading();
+    final dropdownList = await model.getDropdownList();
+    _dropdownState.content(dropdownList);
   }
 
   void _validateForm() {

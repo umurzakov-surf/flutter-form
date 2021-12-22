@@ -85,8 +85,8 @@ class FormPage extends ElementaryWidget<FormPageWM> {
                   },
                 ),
                 Dropdown(
-                  positionState: wm.positionState,
-                  selectedPosition: wm.selectedPosition,
+                  dropdownState: wm.dropdownState,
+                  selectedDropdownItem: wm.selectedDropdownItem,
                   changeDropdown: wm.changeDropdown,
                 ),
                 ValueListenableBuilder<bool>(
